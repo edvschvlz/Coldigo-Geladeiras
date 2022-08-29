@@ -10,7 +10,7 @@ body {
 header {
 	height: 120px;
 	background-color: #008eb6;
-	position: -webkit-sticky;	
+	position: -webkit-sticky;
 	position: sticky;
 	top: 0px;
 }
@@ -103,15 +103,18 @@ footer {
 	padding: 10px;
 }
 
+/*Modais*/
+#modalAviso {
+	display: none;
+}
+
 /* Layout CRUDs	 */
 /* Titulo da página */
-
 section h2, section h3 {
 	text-align: center;
 }
 
 /* Formulários */
-
 .frmInserir {
 	margin: 0px auto;
 	margin-bottom: 10px;
@@ -126,7 +129,7 @@ section h2, section h3 {
 	width: 300px;
 	padding: 2px 0;
 }
-	
+
 .frmInserir textarea {
 	height: 100px;
 	resize: none;
@@ -146,5 +149,3 @@ section h2, section h3 {
 	color: #fff;
 	font-weight: bold;
 }
-
-

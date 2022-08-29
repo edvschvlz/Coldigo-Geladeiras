@@ -18,4 +18,21 @@ $(document).ready(function() {
 			}
 		})
 	}
+	
+	//Define as configurações base de uma modal de aviso
+	COLDIGO.exibirAviso = function(aviso) {
+		var modal = {
+			title: "Mensagem",
+			height: 250,
+			width: 400,
+			modal: true,
+			buttons: {
+				"OK": function() {
+					$(this).dialog("close");
+				}
+			}
+		};
+		$("#modalAviso").html(aviso);
+		$("#modalAviso").dialog(modal);
+	}
 });
