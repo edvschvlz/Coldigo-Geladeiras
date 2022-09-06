@@ -3,7 +3,6 @@ COLDIGO.produto = new Object();
 $(document).ready(function() {
 	//Carrega as marcas registradas no BD no select do formulário de inserir
 	COLDIGO.produto.carregarMarcas = function() {
-		alert("Tentando buscar marcas");
 		$.ajax({
 			type: "GET",
 			url: COLDIGO.PATH + "marca/buscar",
