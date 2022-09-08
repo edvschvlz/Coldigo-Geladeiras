@@ -29,7 +29,7 @@
 				<td><input type="text" name="capacidade"></td>
 			</tr>
 			<tr>
-				<th>Valor (R$)</th>
+				<th>Valor (R$)</th>	
 				<td><input type="text" name="valor"></td>
 			</tr>
 			<tr>
@@ -46,7 +46,7 @@
 	<fieldset>
 		<legend>Filtrar</legend>
 		<input type="text" name="txtBusca" id="campoBuscaProduto" placeholder="Pesquise pelo modelo">
-		<button type="button">Buscar</button>
+		<button type="button" onclick="COLDIGO.produto.buscar()">Buscar</button>
 	</fieldset>
 </form>
 <div id="listaProdutos" class="listaRegistros"></div>
