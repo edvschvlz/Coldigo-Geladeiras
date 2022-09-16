@@ -8,7 +8,7 @@ $(document).ready(function() {
 		} else {
 			select = "#selMarca";
 		}
-		
+
 		$.ajax({
 			type: "GET",
 			url: COLDIGO.PATH + "marca/buscar",
@@ -25,11 +25,11 @@ $(document).ready(function() {
 					for (var i = 0; i < marcas.length; i++) {
 						var option = document.createElement("option");
 						option.setAttribute("value", marcas[i].id);
-						
+
 						if ((id != undefined) && (id == marcas[i].id)) {
 							option.setAttribute("selected", "selected");
 						}
-						
+
 						option.innerHTML = (marcas[i].nome);
 						$(select).append(option);
 					}
@@ -141,17 +141,37 @@ $(document).ready(function() {
 	COLDIGO.produto.buscar();
 
 	COLDIGO.produto.excluir = function(id) {
-		$.ajax({
-			type: "DELETE",
-			url: COLDIGO.PATH + "produto/excluir/" + id,
-			success: function(msg) {
-				COLDIGO.exibirAviso(msg);
-				COLDIGO.produto.buscar();
+		var modalExclusaoProduto = {
+			title: "Excluir Produto",
+			height: 200,
+			width: 400,
+			modal: true,
+			buttons: {
+				"OK": function() {
+					$.ajax({
+						type: "DELETE",
+						url: COLDIGO.PATH + "produto/excluir/" + id,
+						success: function(msg) {
+							COLDIGO.exibirAviso(msg);
+							COLDIGO.produto.buscar();
+						},
+						error: function(info) {
+							COLDIGO.exibirAviso("Erro ao excluir produto: " + info.status + " - " + info.statusText);
+						}
+					})
+				},
+				"Cancelar": function() {
+					$(this).dialog("close");
+				}
 			},
-			error: function(info) {
-				COLDIGO.exibirAviso("Erro ao excluir produto: " + info.status + " - " + info.statusText);
+			close: function() {
+				//caso o usuário simplesmente feche a caixa de edição não deve acontecer nada
 			}
-		})
+		}
+		
+		$("#modalAviso").html("Deseja realmente excluir esse produto?");
+		$("#modalAviso").dialog(modalExclusaoProduto);
+		
 	}
 
 	//Carrega no BD os dados do produto selecionado para alteracao e coloca-os no formulário de alteração
@@ -173,10 +193,10 @@ $(document).ready(function() {
 					} else {
 						selCategoria.options[i].removeAttribute("selected");
 					}
-				}	
-				
+				}
+
 				COLDIGO.produto.carregarMarcas(produto.marcaId);
-				
+
 				var modalEditaProduto = {
 					title: "Editar Produto",
 					height: 400,
@@ -184,7 +204,7 @@ $(document).ready(function() {
 					modal: true,
 					buttons: {
 						"Salvar": function() {
-							
+							COLDIGO.produto.editar();
 						},
 						"Cancelar": function() {
 							$(this).dialog("close");
@@ -194,11 +214,35 @@ $(document).ready(function() {
 						//caso o usuário simplesmente feche a caixa de edição não deve acontecer nada
 					}
 				}
-				
+
 				$("#modalEditaProduto").dialog(modalEditaProduto);
 			},
 			error: function(info) {
 				COLDIGO.exibirAviso("Erro ao buscar produto para edição: " + info.status + " - " + info.statusText);
+			}
+		})
+	}
+
+	COLDIGO.produto.editar = function() {
+		var produto = new Object();
+		produto.id = document.frmEditaProduto.idProduto.value;
+		produto.categoria = document.frmEditaProduto.categoria.value;
+		produto.marcaId = document.frmEditaProduto.marcaId.value;
+		produto.modelo = document.frmEditaProduto.modelo.value;
+		produto.capacidade = document.frmEditaProduto.capacidade.value;
+		produto.valor = document.frmEditaProduto.valor.value;
+
+		$.ajax({
+			type: "PUT",
+			url: COLDIGO.PATH + "produto/alterar",
+			data: JSON.stringify(produto),
+			success: function(msg) {
+				COLDIGO.exibirAviso(msg);
+				COLDIGO.produto.buscar();
+				$("#modalEditaProduto").dialog("close");
+			},
+			error: function(info) {
+				COLDIGO.exibirAviso("Erro ao editar produto: " + info.status + " - " + info.statusText);
 			}
 		})
 	}
