@@ -74,6 +74,7 @@ $(document).ready(function() {
 				url: COLDIGO.PATH + "produto/inserir",
 				data: JSON.stringify(produto),
 				success: function(msg) {
+					COLDIGO.produto.buscar();
 					COLDIGO.exibirAviso(msg);
 					$("#addProduto").trigger("reset");
 				},
@@ -168,10 +169,10 @@ $(document).ready(function() {
 				//caso o usuário simplesmente feche a caixa de edição não deve acontecer nada
 			}
 		}
-		
+
 		$("#modalAviso").html("Deseja realmente excluir esse produto?");
 		$("#modalAviso").dialog(modalExclusaoProduto);
-		
+
 	}
 
 	//Carrega no BD os dados do produto selecionado para alteracao e coloca-os no formulário de alteração
