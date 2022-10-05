@@ -21,9 +21,7 @@ import com.google.gson.JsonObject;
 
 import br.com.coldigogeladeiras.bd.Conexao;
 import br.com.coldigogeladeiras.jdbc.JDBCMarcaDAO;
-import br.com.coldigogeladeiras.jdbc.JDBCProdutoDAO;
 import br.com.coldigogeladeiras.modelo.Marca;
-import br.com.coldigogeladeiras.modelo.Produto;
 
 @Path("marca")
 public class MarcaRest extends UtilRest {
@@ -55,13 +53,14 @@ public class MarcaRest extends UtilRest {
 			Connection conexao = conect.abrirConexao();
 			Marca marca = new Gson().fromJson(marcaParam, Marca.class);
 			JDBCMarcaDAO jdbcMarca = new JDBCMarcaDAO(conexao);
-			boolean retorno = jdbcMarca.inserir(marca);
-			String msg = "";
 			
+			boolean retorno = jdbcMarca.inserir(marca);
+			
+			String msg = "";
 			if (retorno) {
-				msg = "Marca cadastrada com sucesso!";
+				msg = "Marca cadastrada com sucesso.";
 			} else {
-				msg = "Erro ao cadastrar marca.";
+				msg = "Erro ao cadastrar marca!";
 			}
 			
 			conect.fecharConexao();
@@ -105,14 +104,7 @@ public class MarcaRest extends UtilRest {
 			Connection conexao = conec.abrirConexao();
 			JDBCMarcaDAO jdbcMarca = new JDBCMarcaDAO(conexao);
 			
-			boolean retorno = jdbcMarca.deletar(id);
-			
-			String msg = "";
-			if (retorno) {
-				msg = "Marca excluído com sucesso!";
-			} else {
-				msg = "Erro ao excluir marca.";
-			}
+			String msg = jdbcMarca.deletar(id);
 			
 			conec.fecharConexao();
 			
@@ -137,9 +129,9 @@ public class MarcaRest extends UtilRest {
 			
 			String msg = "";
 			if (retorno) {
-				msg = "Produto alterado com sucesso!";
+				msg = "Marca alterada com sucesso!";
 			} else {
-				msg = "Erro ao alterar produto.";
+				msg = "Erro ao alterar marca.";
 			}
 			
 			conec.fecharConexao();

@@ -35,19 +35,11 @@ public class ProdutoRest extends UtilRest {
 			Connection conexao = conec.abrirConexao();
 
 			JDBCProdutoDAO jdbcProduto = new JDBCProdutoDAO(conexao);
-			boolean retorno = jdbcProduto.inserir(produto);
-			String msg = "";
-
-			if (retorno) {
-				msg = "Produto cadastrado com sucesso!";
-			} else {
-				msg = "Erro ao cadastrar produto.";
-			}
+			String msg = jdbcProduto.inserir(produto);
 
 			conec.fecharConexao();
 
 			return this.buildResponse(msg);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			return this.buildErrorResponse(e.getMessage());
@@ -86,25 +78,25 @@ public class ProdutoRest extends UtilRest {
 			Conexao conec = new Conexao();
 			Connection conexao = conec.abrirConexao();
 			JDBCProdutoDAO jdbcProduto = new JDBCProdutoDAO(conexao);
-			
+
 			boolean retorno = jdbcProduto.deletar(id);
-			
+
 			String msg = "";
 			if (retorno) {
 				msg = "Produto excluído com sucesso!";
 			} else {
 				msg = "Erro ao excluir produto.";
 			}
-			
+
 			conec.fecharConexao();
-			
+
 			return this.buildResponse(msg);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return this.buildErrorResponse(e.getMessage());
 		}
 	}
-	
+
 	@GET
 	@Path("/buscarPorId")
 	@Consumes("application/*")
@@ -115,18 +107,18 @@ public class ProdutoRest extends UtilRest {
 			Conexao conec = new Conexao();
 			Connection conexao = conec.abrirConexao();
 			JDBCProdutoDAO jdbcProduto = new JDBCProdutoDAO(conexao);
-			
+
 			produto = jdbcProduto.buscarPorId(id);
-			
+
 			conec.fecharConexao();
-			
+
 			return this.buildResponse(produto);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return this.buildErrorResponse(e.getMessage());
 		}
 	}
-	
+
 	@PUT
 	@Path("/alterar")
 	@Consumes("application/*")
@@ -136,20 +128,20 @@ public class ProdutoRest extends UtilRest {
 			Conexao conec = new Conexao();
 			Connection conexao = conec.abrirConexao();
 			JDBCProdutoDAO jdbcProduto = new JDBCProdutoDAO(conexao);
-		
+
 			boolean retorno = jdbcProduto.alterar(produto);
-			
+
 			String msg = "";
 			if (retorno) {
 				msg = "Produto alterado com sucesso!";
 			} else {
 				msg = "Erro ao alterar produto.";
 			}
-			
+
 			conec.fecharConexao();
-			
+
 			return this.buildResponse(msg);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return this.buildErrorResponse(e.getMessage());
 		}

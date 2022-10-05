@@ -12,7 +12,6 @@ import com.google.gson.JsonObject;
 
 import br.com.coldigogeladeiras.jdbcinterface.MarcaDAO;
 import br.com.coldigogeladeiras.modelo.Marca;
-import br.com.coldigogeladeiras.modelo.Produto;
 
 public class JDBCMarcaDAO implements MarcaDAO {
 	private Connection conexao;
@@ -27,16 +26,42 @@ public class JDBCMarcaDAO implements MarcaDAO {
 
 		try {
 			p = this.conexao.prepareStatement(comando);
-
 			p.setInt(1, marca.getId());
 			p.setString(2, marca.getNome());
 
 			p.execute();
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
 		}
 		return true;
+	}
+
+	public String deletar(int id) {
+		String comando = "SELECT * FROM produtos WHERE marcas_id = ?";
+		PreparedStatement p;
+
+		try {
+			p = this.conexao.prepareStatement(comando);
+			p.setInt(1, id);
+
+			if (!p.executeQuery().next()) {
+				comando = "DELETE FROM marcas WHERE id = ?";
+
+				p = this.conexao.prepareStatement(comando);
+				p.setInt(1, id);
+				p.execute();
+
+				return "Marca excluída com sucesso!";
+			} else {
+				return "A marca possui produtos vinculados! Atualize a página para ver os registros atuais.";
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return "Erro ao excluir marca!";
+		}
 	}
 
 	public List<JsonObject> buscarPorNome(String nomeBusca) {
@@ -129,25 +154,11 @@ public class JDBCMarcaDAO implements MarcaDAO {
 		return listMarcas;
 	}
 
-	public boolean deletar(int id) {
-		String comando = "DELETE FROM marcas WHERE id = ?";
-		PreparedStatement p;
-		try {
-			p = this.conexao.prepareStatement(comando);
-			p.setInt(1, id);
-			p.execute();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
-	}
-
 	public boolean alterar(Marca marca) {
 		String comando = "UPDATE marcas SET nome = ? WHERE id = ?";
 
 		PreparedStatement p;
-		
+
 		try {
 			p = this.conexao.prepareStatement(comando);
 			p.setString(1, marca.getNome());
