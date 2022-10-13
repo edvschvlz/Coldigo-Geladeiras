@@ -21,10 +21,20 @@ public class JDBCProdutoDAO implements ProdutoDAO {
 	}
 
 	public String inserir(Produto produto) {
-		String comando = "SELECT * FROM marcas WHERE id = ?";
+		String comando = "SELECT id FROM produtos WHERE categoria = ? AND marcas_id = ? AND modelo = ?";
 		PreparedStatement p;
 
 		try {
+			p = this.conexao.prepareStatement(comando);
+			p.setString(1, produto.getCategoria());
+			p.setInt(2, produto.getMarcaId());
+			p.setString(3, produto.getModelo());
+			
+			if (p.executeQuery().next()) {
+				return "Produto existente!";
+			}
+			
+			comando = "SELECT * FROM marcas WHERE id = ?";
 			p = this.conexao.prepareStatement(comando);
 			p.setInt(1, produto.getMarcaId());
 

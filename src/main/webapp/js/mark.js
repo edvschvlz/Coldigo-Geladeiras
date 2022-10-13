@@ -45,6 +45,7 @@ $(document).ready(function() {
 		var tabela = "<table>" +
 			"<tr>" +
 			"<th>Nome</th>" +
+			"<th>Status</th>" +
 			"<th class='acoes'>Ações</th>" +
 			"</tr>";
 
@@ -52,6 +53,7 @@ $(document).ready(function() {
 			for (var x = 0; x < listaDeMarcas.length; x++) {
 				tabela += "<tr>" +
 					"<td>" + listaDeMarcas[x].nome + "</td>" +
+					(listaDeMarcas[x].status == 1 ? "<td><label class='switch'><input type='checkbox' id='checkbox' checked disabled><span class='slider round'></span></label></td>" : "<td><label class='switch'><input type='checkbox' id='checkbox' disabled><span class='slider round'></span></label></td>") +
 					"<td>" +
 					"<a onclick=\"COLDIGO.marca.exibirEdicao('" + listaDeMarcas[x].id + "')\"><img src='../../imgs/edit.png' alt='Editar registro'</a> " +
 					"<a onclick=\"COLDIGO.marca.excluir('" + listaDeMarcas[x].id + "')\"><img src='../../imgs/delete.png' alt='Excluir registro'</a> " +
@@ -107,6 +109,14 @@ $(document).ready(function() {
 		marca.id = document.frmEditaMarca.idMarca.value;
 		marca.nome = document.frmEditaMarca.nome.value;
 
+		var checkbox = document.getElementById("checkboxEdicao");
+
+		if (checkbox.checked == true) {
+			marca.status = 1;
+		} else {
+			marca.status = 0;
+		}
+
 		$.ajax({
 			type: "PUT",
 			url: COLDIGO.PATH + "marca/alterar",
@@ -131,9 +141,15 @@ $(document).ready(function() {
 				document.frmEditaMarca.idMarca.value = marca.id;
 				document.frmEditaMarca.nome.value = marca.nome;
 
+				if (marca.status == 1) {
+					document.frmEditaMarca.checkboxEdicao.checked = true;
+				} else {
+					document.frmEditaMarca.checkboxEdicao.checked = false;
+				}
+				
 				var modalEditaMarca = {
 					title: "Editar Marca",
-					height: 200,
+					height: 300,
 					width: 350,
 					modal: true,
 					buttons: {

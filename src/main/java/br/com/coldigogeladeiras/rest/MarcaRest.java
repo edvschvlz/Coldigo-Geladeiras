@@ -54,15 +54,8 @@ public class MarcaRest extends UtilRest {
 			Marca marca = new Gson().fromJson(marcaParam, Marca.class);
 			JDBCMarcaDAO jdbcMarca = new JDBCMarcaDAO(conexao);
 			
-			boolean retorno = jdbcMarca.inserir(marca);
-			
-			String msg = "";
-			if (retorno) {
-				msg = "Marca cadastrada com sucesso.";
-			} else {
-				msg = "Erro ao cadastrar marca!";
-			}
-			
+			String msg = jdbcMarca.inserir(marca);
+		
 			conect.fecharConexao();
 			
 			return this.buildResponse(msg);

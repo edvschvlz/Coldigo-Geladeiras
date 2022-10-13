@@ -20,22 +20,32 @@ public class JDBCMarcaDAO implements MarcaDAO {
 		this.conexao = conexao;
 	}
 
-	public boolean inserir(Marca marca) {
-		String comando = "INSERT INTO marcas (id, nome) VALUES (?, ?)";
+	public String inserir(Marca marca) {
+		String comando = "SELECT nome FROM marcas WHERE nome = ?";
 		PreparedStatement p;
-
+		
 		try {
 			p = this.conexao.prepareStatement(comando);
-			p.setInt(1, marca.getId());
-			p.setString(2, marca.getNome());
+			p.setString(1, marca.getNome());
+			
+			if (!p.executeQuery().next()) {
+				comando = "INSERT INTO marcas (id, nome, status) VALUES (?, ?, ?)";
 
-			p.execute();
+				p = this.conexao.prepareStatement(comando);
+				p.setInt(1, marca.getId());
+				p.setString(2, marca.getNome());
+				p.setInt(3, 1);
 
+				p.executeUpdate();
+				
+				return "Marca cadastrada com sucesso.";
+			} else {
+				return "Marca existente!";
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
+			return "Erro ao cadastrar marca!";
 		}
-		return true;
 	}
 
 	public String deletar(int id) {
@@ -92,10 +102,12 @@ public class JDBCMarcaDAO implements MarcaDAO {
 
 				int id = rs.getInt("id");
 				String nome = rs.getString("nome");
+				int status = rs.getInt("status");
 
 				marca = new JsonObject();
 				marca.addProperty("id", id);
 				marca.addProperty("nome", nome);
+				marca.addProperty("status", status);
 
 				listaMarcas.add(marca);
 			}
@@ -135,10 +147,12 @@ public class JDBCMarcaDAO implements MarcaDAO {
 				// Recebimento dos 2 dados retornados do BD para cada linha encontrada
 				int id = rs.getInt("id");
 				String nome = rs.getString("nome");
+				int status = rs.getInt("status");
 
 				// Setando no objeto marca os valores encontrados
 				marca.setId(id);
 				marca.setNome(nome);
+				marca.setStatus(status);
 
 				// Adição da instância contida no objeto Marca na lista de marcas
 				listMarcas.add(marca);
@@ -155,14 +169,15 @@ public class JDBCMarcaDAO implements MarcaDAO {
 	}
 
 	public boolean alterar(Marca marca) {
-		String comando = "UPDATE marcas SET nome = ? WHERE id = ?";
+		String comando = "UPDATE marcas SET nome = ?, status = ? WHERE id = ?";
 
 		PreparedStatement p;
 
 		try {
 			p = this.conexao.prepareStatement(comando);
 			p.setString(1, marca.getNome());
-			p.setInt(2, marca.getId());
+			p.setInt(2, marca.getStatus());
+			p.setInt(3, marca.getId());
 			p.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -182,9 +197,11 @@ public class JDBCMarcaDAO implements MarcaDAO {
 
 			while (rs.next()) {
 				String nome = rs.getString("nome");
+				int status = rs.getInt("status");
 
 				marca.setId(id);
 				marca.setNome(nome);
+				marca.setStatus(status);
 
 			}
 
